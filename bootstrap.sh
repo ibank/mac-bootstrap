@@ -13,7 +13,7 @@ GIT_USER_EMAIL="${GIT_USER_EMAIL:-}"
 INSTALL_CASK_APPS="${INSTALL_CASK_APPS:-1}"
 INSTALL_AI_TOOLS="${INSTALL_AI_TOOLS:-0}"      # set 1 to install ollama
 INSTALL_DB_TOOLS="${INSTALL_DB_TOOLS:-0}"      # set 1 to install redis/postgresql
-INSTALL_KAKAOTALK="${INSTALL_KAKAOTALK:-1}"    # install via Mac App Store using mas
+INSTALL_KAKAOTALK="${INSTALL_KAKAOTALK:-0}"    # set 1 to install KakaoTalk via Mac App Store (mas)
 SKIP_BREW_UPDATE="${SKIP_BREW_UPDATE:-0}"
 
 BREW_PREFIX="/opt/homebrew"
@@ -294,8 +294,8 @@ EOF
 write_brewfile() {
   local brewfile="$HOME/Brewfile"
   log "Writing $brewfile"
-  # Note: optional AI/DB tools (INSTALL_AI_TOOLS, INSTALL_DB_TOOLS) are intentionally
-  # not included here. Edit this Brewfile to match your install before `brew bundle`.
+  # Note: optional items (INSTALL_AI_TOOLS, INSTALL_DB_TOOLS, INSTALL_KAKAOTALK)
+  # are intentionally not included. Add them manually before `brew bundle` if needed.
   cat > "$brewfile" <<'EOF'
 tap "oven-sh/bun"
 
@@ -329,8 +329,6 @@ cask "claude"
 cask "claude-code"
 cask "ghostty"
 cask "orbstack"
-
-mas "KakaoTalk", id: 869223134
 EOF
 }
 
@@ -347,7 +345,7 @@ post_install_notes() {
    claude
 4) VS Code 실행 후 "Shell Command: Install 'code' command in PATH"
 5) OrbStack 1회 실행해 초기 설정 마무리
-6) KakaoTalk이 안 깔렸다면 App Store 로그인 후 스크립트 재실행
+6) (INSTALL_KAKAOTALK=1 을 썼고 설치 실패 시) App Store 로그인 후 재실행
 7) Brewfile 재사용:
    brew bundle --file ~/Brewfile
 
