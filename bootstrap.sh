@@ -179,13 +179,15 @@ install_core_tools() {
   warn "GitHub CLI(gh)는 설치만 합니다. 로그인은 나중에 'gh auth login'으로 진행하세요."
 
   if [[ -n "$GIT_USER_NAME" ]]; then
-    git config --global user.name "$GIT_USER_NAME"
+    git config --global --replace-all user.name "$GIT_USER_NAME"
   fi
   if [[ -n "$GIT_USER_EMAIL" ]]; then
-    git config --global user.email "$GIT_USER_EMAIL"
+    git config --global --replace-all user.email "$GIT_USER_EMAIL"
   fi
 
-  git config --global credential.helper osxkeychain
+  # --replace-all handles the case where a previous profile set multiple
+  # credential.helper values (common on CI/VM base images).
+  git config --global --replace-all credential.helper osxkeychain
 }
 
 install_optional_db_tools() {
