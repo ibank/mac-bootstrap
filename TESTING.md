@@ -1,5 +1,38 @@
 # Testing
 
+두 가지 레이어로 검증합니다:
+
+- **CI 스모크 (자동)** — GitHub Actions `macos-15` 러너에서 매 push/PR/주간 스케줄에 자동 실행. 상류 Homebrew formula/cask rename 같은 breakage를 조기 탐지.
+- **tart (수동)** — 로컬 Apple Silicon Mac에서 깨끗한 macOS VM을 반복 기동해 full-stack 검증 (defaults, GUI 앱 설치 포함).
+
+---
+
+## CI 스모크 테스트
+
+[.github/workflows/smoke.yml](.github/workflows/smoke.yml) 이 다음을 자동화합니다:
+
+| Job | Runner | 내용 |
+|---|---|---|
+| `lint` | `ubuntu-latest` | `shellcheck bootstrap.sh` |
+| `smoke` | `macos-15` (Apple Silicon) | `./bootstrap.sh` 실제 실행 |
+
+트리거: push to `main`, PR, 매주 월요일 05:00 UTC, manual dispatch.
+
+### CI 러너 한계
+
+Runner에선 다음이 완전 검증되지 않습니다:
+
+- `softwareupdate --install-rosetta` — CI에선 지원 안 됨 (스크립트는 `|| true`로 무시)
+- `defaults write` 결과 — GUI 세션 없음. write는 성공하지만 사용자 경험은 검증 못 함.
+- Cask 앱의 실제 실행 — 설치까지만 검증.
+- `INSTALL_KAKAOTALK=1` — App Store 로그인 불가능하므로 항상 `0` 강제.
+
+→ 실사용 흐름 검증은 아래 tart 로컬 테스트로 보완.
+
+---
+
+## tart 로컬 VM 테스트
+
 tart로 깨끗한 macOS VM을 띄워 `bootstrap.sh`를 반복 검증하는 방법.
 
 ## 요구사항

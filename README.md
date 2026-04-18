@@ -1,5 +1,7 @@
 # mac-bootstrap
 
+[![smoke](https://github.com/ibank/mac-bootstrap/actions/workflows/smoke.yml/badge.svg)](https://github.com/ibank/mac-bootstrap/actions/workflows/smoke.yml)
+
 Apple Silicon Mac(M1/M2/M3/M4)용 1회성 부트스트랩 스크립트.
 Homebrew, 공통 개발 도구, 자주 쓰는 앱, macOS 기본 환경설정까지 한 번에 준비합니다. 재실행 안전(idempotent).
 

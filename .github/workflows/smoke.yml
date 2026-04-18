@@ -1,0 +1,38 @@
+name: smoke
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # 매주 월요일 05:00 UTC — Homebrew formula/cask rename 등 상류 변화 감지
+    - cron: "0 5 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck
+        run: sudo apt-get update -qq && sudo apt-get install -y shellcheck
+      - name: Run shellcheck
+        # -S error: 진짜 버그만 실패로 잡고 style/warning은 통과 (후속 정비용)
+        run: shellcheck -S error bootstrap.sh
+
+  smoke:
+    name: bootstrap on macos-15
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run bootstrap
+        env:
+          # Runner는 ephemeral + GUI 세션 없음 — App Store 로그인이 필요한 항목은 끈다.
+          INSTALL_KAKAOTALK: "0"
+        run: ./bootstrap.sh
