@@ -91,7 +91,46 @@ INSTALL_AI_TOOLS=1 INSTALL_DB_TOOLS=1 ./bootstrap.sh
 3. `claude` 실행 → Claude Code 로그인
 4. VS Code 실행 후 커맨드 팔레트 → *Shell Command: Install 'code' command in PATH*
 5. OrbStack 1회 실행하여 초기화
-6. (`INSTALL_KAKAOTALK=1` 사용 & 설치 실패 시) App Store 로그인 후 재실행
+6. Git 사용자 정보 확인/설정 (아래 참고)
+7. (`INSTALL_KAKAOTALK=1` 사용 & 설치 실패 시) App Store 로그인 후 재실행
+
+### Git config 설정
+
+부트스트랩 실행 시 `GIT_USER_NAME` / `GIT_USER_EMAIL` 환경변수를 넘기지 않았다면, 설치 후 직접 설정해야 합니다.
+
+```bash
+git config --global user.name "홍길동"
+git config --global user.email "me@example.com"
+```
+
+현재 설정 확인:
+
+```bash
+git config --global --list
+git config --global user.name
+git config --global user.email
+```
+
+권장 추가 설정:
+
+```bash
+# 기본 브랜치 이름
+git config --global init.defaultBranch main
+
+# pull 시 rebase 사용 (머지 커밋 방지)
+git config --global pull.rebase true
+
+# push 시 현재 브랜치만 (기본값이지만 명시)
+git config --global push.default current
+
+# 원격에 없는 로컬 브랜치를 push 할 때 자동으로 upstream 설정
+git config --global push.autoSetupRemote true
+
+# 커밋 메시지 편집기 (VS Code 사용 시)
+git config --global core.editor "code --wait"
+```
+
+> `credential.helper=osxkeychain` 은 부트스트랩에서 자동 설정됩니다. GitHub 인증은 `gh auth login` 으로 처리됩니다.
 
 ## 보안 / 주의사항
 
